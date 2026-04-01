@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+
+<html lang="hi">
+
+  <head>
+
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Piyush - Message</title>
+    <style>
+      :root {
+        --bg-1: #fff1f5;
+        --bg-2: #ffe1ea;
+        --bg-3: #ffd1e1;
+        --ink: #2c1a1f;
+        --muted: #6a4a55;
+        --card: #fffafb;
+        --accent: #f09ab2;
+        --accent-2: #b45b77;
+        --accent-3: #f6b4c8;
+        --ring: rgba(240, 154, 178, 0.25);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Cormorant Garamond", "Garamond", "Georgia", serif;
+        color: var(--ink);
+        background:
+          radial-gradient(700px circle at 15% 10%, var(--bg-2), transparent 55%),
+          radial-gradient(700px circle at 85% 0%, var(--bg-3), transparent 60%),
+          linear-gradient(180deg, var(--bg-1), #fff7fb 60%, #ffffff 100%);
+        min-height: 100vh;
+      }
+
+      .page {
+        max-width: 920px;
+        margin: 0 auto;
+        padding: 60px 22px 80px;
+        position: relative;
+      }
+
+      header {
+        text-align: center;
+        padding: 28px 20px 22px;
+        border-bottom: 1px solid rgba(182, 92, 58, 0.25);
+      }
+
+      header h1 {
+        margin: 0 0 8px;
+        font-size: clamp(2.2rem, 4vw, 3.2rem);
+        letter-spacing: 0.5px;
+      }
+
+      header p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 1.1rem;
+      }
+
+      .hero-ribbon {
+        margin: 20px auto 0;
+        text-align: center;
+        display: inline-block;
+        background: linear-gradient(135deg, #ffd6e6, #f6b4c8);
+        color: #2b1b12;
+        padding: 10px 18px;
+        border-radius: 999px;
+        font-weight: 700;
+        box-shadow: 0 10px 24px rgba(240, 138, 93, 0.2);
+      }
+
+      .grid {
+        display: grid;
+        gap: 22px;
+        margin-top: 30px;
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid rgba(240, 154, 178, 0.25);
+        border-radius: 20px;
+        padding: 26px 28px;
+        box-shadow: 0 16px 36px rgba(44, 26, 31, 0.08);
+        position: relative;
+        overflow: hidden;
+        transform: translateY(10px);
+        opacity: 0;
+        animation: rise 0.9s ease forwards;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 22px 48px rgba(44, 26, 31, 0.12);
+      }
+
+      .card:nth-child(2) { animation-delay: 0.06s; }
+      .card:nth-child(3) { animation-delay: 0.12s; }
+      .card:nth-child(4) { animation-delay: 0.18s; }
+
+      .card h2 {
+        margin: 0 0 12px;
+        color: var(--accent-2);
+        font-size: 1.4rem;
+      }
+
+      .card p {
+        margin: 0 0 12px;
+        line-height: 1.65;
+      }
+
+      .card p:last-child {
+        margin-bottom: 0;
+      }
+
+      .note {
+        border-left: 4px solid var(--accent);
+        padding-left: 14px;
+        color: var(--muted);
+      }
+
+      .halo {
+        position: absolute;
+        inset: auto -30px -60px auto;
+        width: 240px;
+        height: 240px;
+        background: radial-gradient(circle, rgba(240, 154, 178, 0.2), transparent 70%);
+        opacity: 0.7;
+        pointer-events: none;
+      }
+
+      .sparkle {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: rgba(240, 154, 178, 0.12);
+        color: var(--accent-2);
+        font-size: 0.95rem;
+        margin-bottom: 12px;
+        border: 1px solid rgba(240, 154, 178, 0.2);
+      }
+
+      .message-box {
+        margin-top: 26px;
+        display: grid;
+        gap: 10px;
+      }
+
+      .fun-zone,
+      .mood-zone {
+        margin-top: 28px;
+      }
+
+      .fun-grid,
+      .mood-grid {
+        display: grid;
+        gap: 14px;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      }
+
+      .fun-card,
+      .mood-card {
+        background: #fff1f6;
+        border: 1px dashed rgba(180, 91, 119, 0.35);
+        border-radius: 16px;
+        padding: 16px 18px;
+      }
+
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .chip {
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: #ffddea;
+        border: 1px solid rgba(180, 91, 119, 0.25);
+        font-size: 0.92rem;
+      }
+
+      .smile-meter {
+        position: relative;
+        height: 10px;
+        border-radius: 999px;
+        background: #f6c9d9;
+        overflow: hidden;
+        margin-top: 10px;
+      }
+
+      .smile-meter span {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, #f6b4c8, #f09ab2);
+        width: 70%;
+        animation: smile 3.8s ease-in-out infinite;
+      }
+
+      .mini-game {
+        margin-top: 14px;
+        display: grid;
+        gap: 10px;
+      }
+
+      .mini-game button,
+      .mood-btn {
+        border: none;
+        background: linear-gradient(135deg, #ffd6e6, #f6b4c8);
+        color: #2b1b12;
+        padding: 10px 14px;
+        border-radius: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 8px 18px rgba(240, 154, 178, 0.2);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .mini-game button:hover,
+      .mood-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 12px 22px rgba(240, 154, 178, 0.25);
+      }
+
+      .mini-game .result {
+        background: #fff3f7;
+        border: 1px solid rgba(180, 91, 119, 0.25);
+        padding: 10px 12px;
+        border-radius: 10px;
+        font-size: 0.95rem;
+      }
+
+      .quote-box {
+        margin-top: 10px;
+        background: #fff8f2;
+        border: 1px solid rgba(180, 91, 119, 0.2);
+        border-radius: 12px;
+        padding: 12px 14px;
+        font-size: 1rem;
+      }
+
+      label {
+        font-weight: 600;
+        color: var(--accent-2);
+      }
+
+      input[type="text"],
+      textarea {
+        width: 100%;
+        border: 1px solid rgba(180, 91, 119, 0.35);
+        border-radius: 12px;
+        padding: 12px 14px;
+        font-size: 1rem;
+        font-family: inherit;
+        background: #fffdf9;
+        outline: none;
+        box-shadow: 0 0 0 0 var(--ring);
+        transition: box-shadow 0.2s ease, border-color 0.2s ease;
+      }
+
+      textarea:focus,
+      input[type="text"]:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 4px var(--ring);
+      }
+
+      footer {
+        margin-top: 42px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.98rem;
+      }
+
+      .promise {
+        display: grid;
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .promise span {
+        display: block;
+        background: #ffeaf2;
+        border: 1px solid rgba(180, 91, 119, 0.25);
+        padding: 10px 12px;
+        border-radius: 12px;
+        font-size: 0.98rem;
+      }
+
+      .floating {
+        position: absolute;
+        width: 140px;
+        height: 140px;
+        border-radius: 28px;
+        background: linear-gradient(135deg, rgba(246, 180, 200, 0.25), rgba(240, 154, 178, 0.1));
+        filter: blur(1px);
+        top: 14px;
+        right: -6px;
+        animation: float 7s ease-in-out infinite;
+        pointer-events: none;
+      }
+
+      .floating.two {
+        width: 100px;
+        height: 100px;
+        left: -10px;
+        top: 130px;
+        animation-delay: 1.6s;
+      }
+
+      @keyframes rise {
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes float {
+        0%,
+        100% { transform: translateY(0); }
+        50% { transform: translateY(16px); }
+      }
+
+      @keyframes smile {
+        0%,
+        100% { width: 58%; }
+        50% { width: 82%; }
+      }
+
+      @media (max-width: 700px) {
+        header { padding: 24px 14px 18px; }
+        .card { padding: 20px 20px; }
+      }
+    </style>
+
+  </head>
+
+  <body>
+
+    <main class="page">
+
+      <span class="floating" aria-hidden="true"></span>
+
+      <span class="floating two" aria-hidden="true"></span>
+
+      <header>
+
+        <h1>Palak, aapki khushi sabse pehle</h1>
+
+        <p>Ek narmi bhara, saccha aur respectful message - sirf aapke liye.</p>
+        <div class="hero-ribbon">Aaj ka mood: Smile &amp; Peace</div>
+
+      </header>
+
+
+
+      <section class="grid">
+
+        <article class="card">
+
+          <div class="halo" aria-hidden="true"></div>
+
+          <div class="sparkle">Dil se</div>
+
+          <h2>Maafi, dil se</h2>
+
+          <p>
+
+            Mujhse galtiyan hui hain, aur aapko dukh ya pareshani pahunchi ho to
+
+            main dil se maafi chahta hoon.
+
+          </p>
+
+          <p class="note">
+
+            Main apni galti samajhta hoon aur sudharna chahta hoon.
+
+          </p>
+
+        </article>
+
+
+
+        <article class="card">
+
+          <div class="halo" aria-hidden="true"></div>
+
+          <div class="sparkle">Respect</div>
+
+          <h2>Space aur respect</h2>
+
+          <p>
+
+            Aapki boundaries aur comfort meri priority hai. Agar aapko space
+
+            chahiye, main uska pura samman karunga.
+
+          </p>
+
+          <p>
+
+            Jo aapko sahi lage, wahi mere liye sahi hai.
+
+          </p>
+
+        </article>
+
+
+
+        <article class="card">
+
+          <div class="halo" aria-hidden="true"></div>
+
+          <div class="sparkle">Khushi</div>
+
+          <h2>Chhoti si khushi</h2>
+
+          <p>
+
+            Main chahta hoon ki aap thoda sa muskurao - bina kisi pressure ke,
+            bas aapke liye.
+          </p>
+
+          <p class="note">
+
+            Aapka sukoon mere liye sabse important hai.
+
+          </p>
+
+        </article>
+
+
+
+        <article class="card">
+
+          <div class="halo" aria-hidden="true"></div>
+
+          <div class="sparkle">Promise</div>
+
+          <h2>Aaj ka promise</h2>
+
+          <p>
+
+            Main aapko pareshan nahi karunga, aur jab bhi baat karni ho,
+
+            aapki marzi se hi karunga.
+
+          </p>
+
+          <p>
+
+            Aapki khushi aur izzat - wahi meri priority hai.
+          </p>
+
+          <div class="promise">
+
+            <span>Doosron ke saamne aapki respect kabhi kam nahi hogi.</span>
+
+            <span>Har baat calm aur politely hogi.</span>
+
+            <span>Agar aap "no" kahengi, main samajh jaunga.</span>
+          </div>
+
+        </article>
+
+      </section>
+
+
+
+      <section class="card fun-zone" aria-label="Fun Zone">
+
+        <div class="sparkle">Fun</div>
+
+        <h2>Thoda fun, thodi smile</h2>
+
+        <p>
+
+          Ye chhota sa fun corner aapke liye - bina pressure, bas halka sa
+          smile.
+
+        </p>
+
+        <div class="fun-grid">
+
+          <div class="fun-card">
+
+            <strong>Smile Meter</strong>
+
+            <div class="smile-meter" aria-hidden="true">
+
+              <span></span>
+
+            </div>
+
+            <p class="note">Aaj ka goal: thoda sa aur khush.</p>
+
+          </div>
+
+          <div class="fun-card">
+
+            <strong>Compliment Pack</strong>
+
+            <div class="chips">
+
+              <span class="chip">Kind heart</span>
+
+              <span class="chip">Calm smile</span>
+
+              <span class="chip">Pure vibes</span>
+
+              <span class="chip">Strong soul</span>
+
+            </div>
+
+          </div>
+
+          <div class="fun-card">
+
+            <strong>Mini Wish</strong>
+
+            <p>
+
+              Aaj aapki chai perfect ho, din smooth ho, aur har baat easy ho.
+
+            </p>
+
+          </div>
+
+        </div>
+
+        <div class="mini-game" aria-label="Mini Game">
+
+          <strong>Lucky Smile Button</strong>
+
+          <button type="button" onclick="showWish()">Click kijiye</button>
+          <div id="wishResult" class="result">Yahan chhota sa surprise aayega.</div>
+
+        </div>
+
+      </section>
+
+
+
+      <section class="card mood-zone" aria-label="Mood Boosters">
+
+        <div class="sparkle">Mood Boost</div>
+
+        <h2>Khushi ke chhote boosters</h2>
+
+        <div class="mood-grid">
+
+          <div class="mood-card">
+
+            <strong>1 Minute Break</strong>
+
+            <p class="note">
+
+              Ek gehri saans lo, aankhein band karo, aur sirf ek acchi baat
+
+              yaad karo.
+
+            </p>
+
+          </div>
+
+          <div class="mood-card">
+
+            <strong>Instant Compliment</strong>
+
+            <p>Aapki presence hi calm feel karati hai.</p>
+
+          </div>
+
+          <div class="mood-card">
+
+            <strong>Quote Spinner</strong>
+
+            <button class="mood-btn" type="button" onclick="spinQuote()">
+              Quote dikhaiye
+            </button>
+            <div id="quoteBox" class="quote-box">
+
+              Yahan ek pyaara sa line aayega.
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+      <section class="card message-box" aria-label="Message Box">
+
+        <label for="message">Palak ke liye apna message yahan likhiye</label>
+
+        <textarea
+
+          id="message"
+
+          placeholder="Palak, mujhe maaf kar do... aapke liye meri feelings..."
+
+        ></textarea>
+
+      </section>
+
+
+
+      <footer>
+
+        Aapki khushi sabse badi baat hai - main shanti aur izzat ke saath
+        aapki marzi ka intezar karunga.
+
+      </footer>
+
+    </main>
+
+    <script>
+
+      const wishes = [
+
+        "Aaj aapki muskaan sabse pyari lage.",
+
+        "Aapka din halka aur happy rahe.",
+
+        "Aapka favorite song aaj sunai de.",
+
+        "Aaj ke din me sirf sukoon ho.",
+
+        "Aapki coffee/tea perfect bane.",
+        "Aapko ek chhota sa surprise mile."
+
+      ];
+
+
+
+      const quotes = [
+
+        "Aapki khushi se hi duniya aur soft lagti hai.",
+
+        "Chhoti si muskaan bhi bada magic karti hai.",
+
+        "Aapke saath har din thoda sa bright hota hai.",
+
+        "Aaj aapke liye sirf acchi baatein.",
+
+        "Aapka sukoon, sabse precious gift hai."
+
+      ];
+
+
+
+      function showWish() {
+
+        const pick = wishes[Math.floor(Math.random() * wishes.length)];
+
+        document.getElementById("wishResult").textContent = pick;
+
+      }
+
+
+
+      function spinQuote() {
+
+        const pick = quotes[Math.floor(Math.random() * quotes.length)];
+
+        document.getElementById("quoteBox").textContent = pick;
+
+      }
+
+    </script>
+
+  </body>
+
+</html>
+
